@@ -7,7 +7,6 @@ DOCKER_LOGIN=`eval ${AWS_ECR_GET_LOGIN}`
 eval ${DOCKER_LOGIN}
 
 # build image
-php composer install --no-dev
 docker build -t php-fpm:latest -f docker/php-fpm/Dockerfile .
 
 # store image
