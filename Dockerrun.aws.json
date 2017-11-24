@@ -1,0 +1,67 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [
+    {
+      "name": "env",
+      "host": {
+        "sourcePath": "/tmp/.env"
+      }
+    },
+    {
+      "name": "nginx_conf",
+      "host": {
+        "sourcePath": "/var/app/current/nginx/nginx.conf"
+      }
+    },
+    {
+      "name": "nginx_site_conf",
+      "host": {
+        "sourcePath": "/var/app/current/nginx/site.conf"
+      }
+    }
+  ],
+  "containerDefinitions":[
+    {
+      "name": "app-nginx",
+      "hostname": "app-nginx",
+      "image": "nginx:alpine",
+      "essential": true,
+      "memory": 128,
+      "links":[
+        "php-fpm"
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "nginx_conf",
+          "containerPath": "/etc/nginx/nginx.conf",
+          "readOnly": true
+        },
+        {
+          "sourceVolume": "nginx_site_conf",
+          "containerPath": "/etc/nginx/conf.d/default.conf",
+          "readOnly": true
+        }
+      ],
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ]
+    },
+    {
+      "name": "php-fpm",
+      "hostname": "php-fpm",
+      "image": "ここに公開イメージまたは独自イメージを指定する",
+      "essential": true,
+      "memory": 128,
+      "mountPoints": [
+        {
+          "sourceVolume": "env",
+          "containerPath": "/var/www/html/.env",
+          "readOnly": true
+        }
+      ]
+    }
+  ]
+}
